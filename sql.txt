@@ -1,0 +1,373 @@
+
+SQL> ALTER SESSION SET SQL_TRACE=TRUE;
+
+Session altered.
+
+SQL> SELECT * FROM EMP;
+
+     EMPNO ENAME                                                    ESAL
+---------- -------------------------------------------------- ----------
+    DEPTNO
+----------
+EJOB
+--------------------------------------------------------------------------------
+      1000 alex                                                     5000
+        10
+it
+
+      1001 max                                                      6000
+        20
+hr
+
+     EMPNO ENAME                                                    ESAL
+---------- -------------------------------------------------- ----------
+    DEPTNO
+----------
+EJOB
+--------------------------------------------------------------------------------
+
+      1002 mike                                                     7000
+        30
+java
+
+      1003 varma                                                    7500
+        40
+
+     EMPNO ENAME                                                    ESAL
+---------- -------------------------------------------------- ----------
+    DEPTNO
+----------
+EJOB
+--------------------------------------------------------------------------------
+finance
+
+      1004 akash                                                    8000
+        50
+business
+
+      1005 raju                                                     5800
+
+     EMPNO ENAME                                                    ESAL
+---------- -------------------------------------------------- ----------
+    DEPTNO
+----------
+EJOB
+--------------------------------------------------------------------------------
+        60
+it
+
+      1006 ram                                                     37600
+        70
+hr
+
+
+     EMPNO ENAME                                                    ESAL
+---------- -------------------------------------------------- ----------
+    DEPTNO
+----------
+EJOB
+--------------------------------------------------------------------------------
+      1007 mahi                                                    48000
+        80
+scientist
+
+      1008 rishi                                                   34000
+        90
+finance
+
+     EMPNO ENAME                                                    ESAL
+---------- -------------------------------------------------- ----------
+    DEPTNO
+----------
+EJOB
+--------------------------------------------------------------------------------
+
+      1009 malathi                                                 52000
+        10
+astronaut
+
+      1010 chamarthi                                               32000
+        20
+
+     EMPNO ENAME                                                    ESAL
+---------- -------------------------------------------------- ----------
+    DEPTNO
+----------
+EJOB
+--------------------------------------------------------------------------------
+it
+
+
+11 rows selected.
+
+SQL> SET LINES 120
+SQL> SET PAGES 120
+SQL> SELECT * FROM EMP;
+
+     EMPNO ENAME                                                    ESAL     DEPTNO
+---------- -------------------------------------------------- ---------- ----------
+EJOB
+----------------------------------------------------------------------------------------------------
+      1000 alex                                                     5000         10
+it
+
+      1001 max                                                      6000         20
+hr
+
+      1002 mike                                                     7000         30
+java
+
+      1003 varma                                                    7500         40
+finance
+
+      1004 akash                                                    8000         50
+business
+
+      1005 raju                                                     5800         60
+it
+
+      1006 ram                                                     37600         70
+hr
+
+      1007 mahi                                                    48000         80
+scientist
+
+      1008 rishi                                                   34000         90
+finance
+
+      1009 malathi                                                 52000         10
+astronaut
+
+      1010 chamarthi                                               32000         20
+it
+
+
+11 rows selected.
+
+SQL> CREATE OR REPLACE PROCEDURE CLS(PHNE IN NUMBER)
+  2  IS
+  3  VT VARCHAR2(20);
+  4  BEGIN
+  5  SELECT ENAME INTO VT FROM EMP WHERE EMPNO=PHNE;
+  6  DBMS_OUTPUT.PUT_LINE(VT);
+  7  END;
+  8  /
+
+Procedure created.
+
+SQL> EXEC CLS(1000);
+alex
+
+PL/SQL procedure successfully completed.
+
+SQL> SHOW PARAMETER USER_DUMP_DEST;
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+user_dump_dest                       string      C:\app\oracle\diag\rdbms\xe\xe
+                                                 \trace
+SQL> alter session set sql_trace=false;
+
+Session altered.
+
+SQL> commit;
+
+Commit complete.
+
+
+GLOBAL TEMPORARY TABLES
+=========================
+THESE TABLES ARE USED TO CREATE TEMPORARILY FOR THE STORAGE OF DATA AND THESE DATA IS STORED IN RAM WHICH WE CAN RETRIEVE FASTER
+TYPES:
+======
+TRANSACTION SPECIFIC GTT:----THESE TABLE WILL DELETE THE ROWS WHICH WE PERFORMED AFTER DOING COMMIT.
+==========================
+CREATE GLOBAL TEMPORARY TABLE GTT1(ID NUMBER)
+ON COMMIT DELETE ROWS;
+
+INSERT INTO GTT1 VALUES(10);
+INSERT INTO GTT1 VALUES(20);
+INSERT INTO GTT1 VALUES(30);
+
+COMMIT;
+
+SESSION SPECIFIC GTT:---THESE TABLE WILL PERFORM THE OPERATION UNTIL THE CONNECTION LOST.
+====================
+CREATE GLOBAL TEMPORARY TABLE GTT2(ID NUMBER)
+ON COMMIT PRESERVE ROWS;
+
+INSERT INTO GTT1 VALUES(10);
+INSERT INTO GTT1 VALUES(20);
+INSERT INTO GTT1 VALUES(30);
+COMMIT;
+
+EVEN AFTER COMMITING ALSO DTA WHICH IS PRESENT WILL NOT LOST UNTIL WE DISCONNECT THE SESSION.
+
+BACKUP & RECOVERY:
+====================
+PHYSICAL BACKUP
+1.HOT BACKUP----WHENEVER THE DATABASE IS IN CONNECTION THEN IT IS ACTIVE
+2.COLD BACKUP---WHENEVER THE DATABASE IS NOT IN CONNECTION THEN IT IS INACTIVE.
+  
+CP---COPY
+RMAN---RECOVERY MANAGER
+
+LOGICAL BACKUP:-----ALSO KNOWN AS TRADITIONAL BACKUP
+THIS BACKUP IS DONE ON DB OBJECTS LIKE TABLES/VIEWS ETC
+AND IN THIS BACKUP DATA BASE NEED TO BE IN ACTIVE
+
+IMPORT AND EXPORT: OPERATIONS WILL BE DONE
+
+EXPORT:----USED TO GET THE DATA FILE FROM ORACLE TO OUR DESTINED FOLDER
+IMPORT:----USED TO LOAD THE DATA FROM OUR DESTINED FOLDER INTO ORACLE
+
+IN CMD PROMPT:
+
+EXP SYSTEM/SYSTEM TABLES='EMP' FILE='D:\EMP_DP.DMP';
+
+IF WE WANT TO MENTION MULTIPLE TABLES THEN WE NEED TO MENTION TABLES=('EMP','DEPT')
+
+IMP SYSTEM/SYSTEM TABLES='EMP' FILE='D:\EMP_DP.DMP';
+
+
+TO GENERATE 10 SEQUENTIAL DATES:
+-----------------------------------------------
+SELECT
+(TO_DATE('31-05-2017','DD-MM-YYYY')- LEVEL + 1) AS DAY
+FROM 
+DUAL
+CONNECT BY LEVEL <= (TO_DATE('31-05-2017','DD-MM-YYYY')-TO_DATE('21-05-2017','DD-MM-YYYY')+1);
+
+SQL TRACE & TKPROF:
+-------------------------------
+ALTER SESSION SET SQL_TRACE=TRUE;
+
+THEN WE NEED TO PERFORM THE SQL OR PLSQL CODING
+AFTER EXECUTING THE CODING THEN AGAIN
+
+ALTER SESSION SET SQL_TRACE=FALSE;
+
+SHOW PARAMETER USER_DUMP_DEST:-----------SHOWS THE PATH WHERE THE TRACE FOLDER IS LOCATED
+
+AFTER FINDING THE FILE WITH XE_ORA EXTENSION FILE WE NEED TO COPY IT INTO ANOTHER FOLDER WHICH WE CAN'T UNDERSTAND
+
+THEN AFTER WE NEED TO OPEN THE CMD PROMPT 
+
+TKPROF D:\NEW\XE_ORA_988 D:\NEW\NEW.TXT
+
+THESE TKPROF IS USED TO GENERATE THE REPORT AND IT IS MAINLY USED TO CONVERT THE TRACE FILE REPORT INTO READABLE FORMAT THAT IS TEXT FORMAT.
+
+WM_CONCAT
+-----------------
+SQL wm_concat function
+
+Expert Oracle Database Tips by Donald BurlesonConsulting
+
+September 19, 2015
+
+Question: I have a table test_test and I need to count the distinct mark columns and them display all matching values on one line:
+
+Name    Mark
+------- ------
+ABC     10
+DEF     10
+GHI     10
+JKL     20
+MNO     20
+PQR     30
+
+The result should be like this, with the count and the rows groups onto the same line;
+ 
+mark count     names
+---- -----     -----------
+10       3     ABC,DEF,GHI
+20       2     JKL,MNO
+30       1     PQR
+
+
+Answer: By Laurent Schneider:  You could write your own aggregate function or use wm_concat:
+
+select 
+   mark, 
+   count(*), 
+   wm_concat(name) 
+from 
+   test_test 
+group by 
+   mark;
+
+Here is another example of using wm_concat:
+
+select 
+   deptno, 
+   wm_concat(distinct ename) 
+from 
+   emp 
+group by 
+   deptno;
+
+DEPTNO     WM_CONCAT(DISTINCTENAME)
+---------- ----------------------------------------
+10         CLARK,KING,MILLER
+20         ADAMS,FORD,JONES,SCOTT,SMITH
+30         ALLEN,BLAKE,JAMES,MARTIN,TURNER,WARD
+
+LISTAGG:
+------------
+Base Data:
+
+    DEPTNO ENAME
+---------- ----------
+        20 SMITH
+        30 ALLEN
+        30 WARD
+        20 JONES
+        30 MARTIN
+        30 BLAKE
+        10 CLARK
+        20 SCOTT
+        10 KING
+        30 TURNER
+        20 ADAMS
+        30 JAMES
+        20 FORD
+        10 MILLER
+
+Desired Output:
+
+    DEPTNO EMPLOYEES
+---------- --------------------------------------------------
+        10 CLARK,KING,MILLER
+        20 SMITH,FORD,ADAMS,SCOTT,JONES
+        30 ALLEN,BLAKE,MARTIN,TURNER,JAMES,WARD
+
+COLUMN employees FORMAT A50
+
+SELECT deptno, LISTAGG(ename, ',') WITHIN GROUP (ORDER BY ename) AS employees
+FROM   emp
+GROUP BY deptno;
+
+    DEPTNO EMPLOYEES
+---------- --------------------------------------------------
+        10 CLARK,KING,MILLER
+        20 ADAMS,FORD,JONES,SCOTT,SMITH
+        30 ALLEN,BLAKE,JAMES,MARTIN,TURNER,WARD
+
+3 rows selected.
+
+
+CORRELATED SUBQUERY:
+
+IT IS A COMBINATION OF PLAIN QUERY AND JOINS.
+PLAIN QUERY:ACTUALLY THE OUTER QUERY CANNOT ACCESS THE INNER QUERY 
+
+WHILE IN THE CORRELATED QUERY THE OUTER QUERY CAN ACCESS THE INNER QUERY ALSO.THAT MEANS IT DEPENDS ON PARENT QUERY.
+
+SELECT * FROM EMP A WHERE 1=(SELECT COUNT(DISTINCT(B.ESAL)) FROM EMP B WHERE A.ESAL<=B.ESAL;
+
+USED TO FIND THE 1ST HIGHEST SALARY
+IF 2 WILL BE THEN 2 ND HIGH SAL.
+
+
+
+SELECT * FROM ALL_DEPENDENCIES WHERE TYPE = 'TRIGGER';------COMMAND USED TO DISPLAY THE LIST OF AL  TRIGGERS.

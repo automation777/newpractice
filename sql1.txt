@@ -1,0 +1,333 @@
+create table customer_billing_account(
+cust_billing_keyid           number not null,
+data_src_id                   number not null,
+src_billing_account_id        number not null,
+customer_location_key         number null,
+icoms_customer_record_key     number null,
+customer_account_key          number null,
+account_type                  varchar2(200) null,
+addr_integration_status       varchar2(200) null,
+billing_account_number        varchar2(400) null,
+customer_billing_account_desc varchar2(400) null,
+in_collections_flg            varchar2(10) null,
+customer_billing_account_nm   varchar2(200) null,
+source_system                 varchar2(400) null,
+create_date                   date null,
+create_by                     varchar2(80) null,
+last_update_dt                date null,
+last_update_by                varchar2(80) null,
+constraint pk2_key Primary Key(cust_billing_keyid),
+constraint fk1_key Foreign Key(customer_account_key) References customer_billing_account1(customer_account_key),
+constraint fk2_key Foreign Key(icoms_customer_record_key) References customer_billing_account1(icoms_customer_record_key),
+constraint fk3_key Foreign Key(customer_location_key) References customer_billing_account1(customer_location_key));
+
+create sequence customer_billing_account.seq
+start with 10002828,
+increment by 2,
+no cache;
+
+create table customer_account(
+customer_account_key      number not null,
+data_src_id  number null,
+src_customer_account_id number null,
+customer_category_key number null,
+org_type_custom_lov_key number null,
+icoms_natl_accnt_cust_lov_key number null,
+market_segment_cust_lov_key number null,
+ownership_custom_lov_key number null,
+sales_segment_custom_lov_key number null,
+vip_code_custom_lov_key number null,
+account_nbr varchar2(500) null,
+customer_nm varchar2(500) null,
+duns_nbr    varchar2(200) null,
+doing_bus_as varchar2(1000) null,
+status  varchar2(200) null,
+customer_since_dt  date null,
+credit_rating  varchar2(200) null,
+address_line_one varchar2(3998) null,
+address_line_two varchar2(1000) null,
+city varchar2(50) null,
+country varchar2(45) null,
+annual_revenue number(22,7) null,
+credit_status varchar2(200) null,
+customer_desc varchar2(400) null,
+email varchar2(4000) null,
+fax  varchar2(4000) null,
+myaccount_profile_nm varchar2(200) null,
+nbr_of_cell_phones number null,
+nbr_of_computers number null,
+nbr_of_data_cards number null,
+nbr_of_employees number null,
+nbr_of_locations number null,
+payment_hist_status varchar2(200) null,
+phone_nbr varchar2(20) null,
+tax_id varchar2(3000) null,
+vertical varchar2(4000) null,
+website varchar2(4000) null,
+zip_cd varchar2(10) null,
+create_dt date null,
+create_by varchar2(80) null,
+last_update_dt date null,
+last_update_by varchar2(80) null,
+workflow_id number null,
+workflow_run_id number null,
+session_instance_nm varchar2(300) null,
+error_flg varchar2(1) null,
+src_system varchar2(200) null,
+account_manager number(20) null,
+constraint pk4_key Primary Key(customer_account_key));
+
+create table customer_billing_acct_add(
+customer_billing_acct_add_key number not null,
+data_src_id number not null,
+src_billing_acct_add_id number not null,
+addr_type_custom_lov_key number null,
+fraction_custom_lov_key number null,
+cust_billing_keyid  number null,
+post_directional_cust_lov_key number null,
+pre_directional_cust_lov_key number null,
+address_line_four varchar2(400) null,
+address_line_one  varchar2(400) null,
+address_line_three varchar2(400) null,
+address_line_two varchar2(400) null,
+apartment varchar2(400) null,
+business_phone varchar2(400) null,
+building varchar2(400) null,
+city varchar2(400) null,
+country varchar2(400) null,
+billing_account_addr_desc varchar2(400),
+email varchar2(400) null,
+fax varchar2(400)  null,
+full_name_line_one varchar2(400) null,
+full_name_line_two varchar2(400) null,
+home_phone varchar2(400) null,
+house_nbr varchar2(400) null,
+in_case_of_nm varchar2(400) null,
+billing_account_addr_nm varchar2(200) null,
+state number(38) null,
+street varchar2(400) null,
+usps_validated_desc varchar2(400) null,
+zip_cd varchar2(10) null,
+zip_four varchar2(400) null,
+zip_two varchar2(400) null,
+source_system varchar2(400) null,
+create_dt date null,
+create_by varchar2(50) null,
+last_update_dt date null,
+last_update_by varchar2(80) null,
+constraint fk_billing_acct_key Foreign Key(cust_billing_keyid) References customer_billing_account(cust_billing_keyid ));
+
+
+create table customer_location(
+customer_location_key number not null,
+data_src_id number null,
+src_customer_location_id number null,
+customer_account_key number null,
+property_address_key number null,
+primary_contact_key number null,
+location_nm varchar2(200) null,
+location_desc varchar2(400) null,
+tax_id varchar2(400) null,
+customer_location_nbr varchar2(400) null,
+email_address varchar2(400) null,
+exceeds_svnths_sq_feet_flg varchar2(400) null,
+phone_nbr varchar2(20) null,
+secondary_phone_number varchar2(20) null,
+source_system varchar2(400) null,
+icoms_location_desc varchar2(400) null,
+in_collection_flg varchar2(10) null,
+rate_center varchar2(400) null,
+tax_exempt_code varchar2(400) null,
+create_dt date null,
+create_by varchar2(80) null,
+last_update_dt date null,
+last_update_by varchar2(80) null,
+workflow_id number null,
+workflow_run_id number null,
+session_instance_nm varchar2(250) null,
+error_flg varchar2(10) null,
+constraint pk3_customer_loc Primary Key(customer_location_key)); 
+
+
+create table  icoms_customer_record(
+icoms_customer_record_key number not null,
+data_src_id number null,
+src_icoms_customer_record_id number null,
+customer_location_key number null,
+icoms_house_record_key number null,
+customer_status_custom_lov_key number null,
+primary_flg varchar2(400) null,
+customer_nm varchar2(200) null,
+customer_desc varchar2(200) null,
+occupancy_cd varchar2(50) null,
+icoms_site_id varchar2(50) null,
+src_create_dt date null,
+src_last_update_dt date null,
+create_dt date null,
+create_by varchar2(80) null,
+last_update_dt date null,
+last_update_by varchar2(80) null,
+workflow_id number null,
+workflow_run_id number null,
+session_instance_nm varchar2(250) null,
+error_flg varchar2(1) null,
+constraint pk5_icoms_custrec Primary Key(icoms_customer_record_key));
+
+
+create table current_provider(
+current_provider_key number not null,
+data_src_id number not null,
+src_current_provider_id number not null,
+sales_competitor_key number null,
+customer_account_key number null,
+type_custom_lov_key number null,
+contract_expiration_dt date null,
+current_spending_amt number(22,7) null,
+current_provider_desc varchar2(400) null,
+current_provider_nm varchar2(400) null,
+source_system varchar2(400) null,
+create_dt date null,
+create_by varchar2(80) null,
+last_update_dt date null,
+last_update_by varchar2(80) null,
+constraint pk6_current_providerkey  Primary Key(current_provider_key));
+
+
+
+create table customer_duns_number(
+customer_duns_nbr_key number not null,
+data_src_id number not null,
+src_cust_duns_nbr_id number not null,
+customer_account_key number null,
+credit_rating varchar2(400) null,
+credit_status varchar2(400) null,
+customer_duns_desc varchar2(400) null,
+customer_duns_nm varchar2(200) null,
+source_system varchar2(400) null,
+create_dt date null,
+create_by varchar2(80) null,
+last_update_dt date null,
+last_update_by varchar2(80) null,
+constraint pk7_cust_duns_nbrkey  Primary Key(customer_duns_nbr_key));
+
+create table opportunity(
+opportunity_key number not null,
+data_src_id number null,
+src_opportunity_id number null,
+opportunity_status_key number null,
+opportunity_sales_stage_key number null,
+opportunity_change_reason_key number null,
+customer_account_key number null,
+sales_territory_key number null,
+owner_user_key number null,
+lead_key number null,
+src_types_custom_lov_key number null,
+status_change_reason_lov_key number null,
+referrer_user_key number null,
+customer_category_key number null,
+opportunity_nm varchar2(200) null,
+opportunity_desc varchar2(200) null,
+primary_flg varchar2(10) null,
+expected_close_dt date null,
+lost_to_competitor number null,
+estimated_mrc number(22,7) null,
+estimated_nrc number(22,7) null,
+estimated_usage number(22,7) null,
+planned_product_offering varchar2(400) null,
+src_last_change_type varchar2(400) null,
+owners_share number(22,7) null,
+actual_mrc number(22,7) null,
+weighted_mrc number(22,7) null,
+probability_of_success number null,
+src_id varchar2(400) null,
+src_system varchar2(300) null,
+rfp_flg varchar2(10) null,
+type_2_flg varchar2(10) null,
+type_2_details varchar2(400) null,
+reason_desc varchar2(400) null,
+assignment_dt date null,
+last_change_dt date null,
+actual_close_dt date null,
+stage_start_dt date null,
+went_to_inprogress_dt date null,
+create_dt  date  null,
+create_by varchar2(80) null,
+last_update_dt date null,
+last_update_by varchar2(80) null,
+workflow_id number null,
+workflow_run_id number null,
+session_instance_nm varchar2(250) null,
+error_flg varchar2(1) null,
+sales_channel_custom_lov_key number null,
+sales_competitor_key number null,
+constraint pk8_opportunitykey  Primary Key(opportunity_key),
+constraint fk1_salescompetitor Foreign Key(sales_competitor_key) References sales_competitors(sales_competitor_key));
+ 
+
+ALTER TABLE current_provider ADD constraint fk1_customer_acctkey Foreign Key(customer_account_key) References customer_account(customer_account_key);
+ALTER TABLE current_provider ADD constraint fk2_sales_competitorkey Foreign Key(sales_competitor_key) References sales_competitors(sales_competitor_key);
+
+ALTER TABLE current_provider ADD constraint fk1_customer_acctkey Foreign Key(customer_account_key) References customer_account(customer_account_key);
+
+
+ALTER TABLE customer_billing_account ADD constraint fk3_icoms_cust_recordkey Foreign Key(icoms_customer_record_key) References icoms_customer_record(icoms_customer_record_key);
+
+
+ALTER TABLE customer_billing_account ADD constraint fk4_customer_lockey Foreign Key(customer_location_key) References customer_location(customer_location_key);
+
+
+ALTER TABLE customer_billing_account ADD constraint fk4_customer_lockey Foreign Key(customer_location_key) References customer_location(customer_location_key);
+
+ALTER TABLE customer_duns_number ADD constraint fk_customer_acctkey Foreign Key(customer_account_key) References customer_account(customer_account_key);
+
+BANK;
+
+create table kcb_acc_tab(
+   accno number primary key,
+   name varchar2(20) constraint name_nn not null,
+   actype char check(actype in('s','c','fd')),
+   doo date default sysdate,
+   bal number(8,2) not null);
+
+insert into kcb_acc_tab values(37002167543,'srinivas','s',sysdate,15000);
+insert into kcb_acc_tab values(36002167543,'amit','s',sysdate,25000);
+insert into kcb_acc_tab values(5002167543,'arnav','s',sysdate,35000);
+insert into kcb_acc_tab values(34002167543,'akash','s',sysdate,55000);
+insert into kcb_acc_tab values(33002167543,'akhil','s',sysdate,85000);
+
+create table kcb_tran_tab(
+tid number,
+accno number(20) references kcb_acc_tab(accno),
+trtype char(10) check(trtype in('d','w')),
+dot date default sysdate,
+amt number(7,2) check(amt>100));
+
+
+
+
+
+declare
+i kcb_acc_tab%Rowtype;
+k kcb_tran_tab%Rowtype;
+begin
+i.accno:=&accno;
+k.trtype:=&trtype;
+k.amt:=&amt;
+select bal into i.bal from kcb_acc_tab where accno=i.accno;
+if k.trtype='D' then
+i.bal:=i.bal+k.amt
+dbms_output.put_line(amount deposited);
+end if;
+update kcb_acc_tab set bal=i.bal where accno=i.accno;
+insert into kcb_tran_tab values(s1.nextval,i.accno,k.trtype,sysdate,k.amt);
+end;
+
+
+
+
+
+select * from v$version;
+
+
+
+

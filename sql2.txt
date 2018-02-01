@@ -1,0 +1,322 @@
+make -f ins_rdbms.mk option_switch ioracle
+ 
+cd $ORACLE_HOME/rdbms/lib
+make -f ins_rdbms.mk part_on ioracle
+
+
+Here is the list of database options and switches:
+Database Option	                ON	                   OFF
+Data Mining	              dm_on	                        dm_off
+Data Mining Scoring Engine	dmse_on	dmse_off
+Database Vault	dv_on	dv_off
+Label Security	lbac_on	lbac_off
+Partitioning	part_on	part_off
+Real Application Clusters	rac_on	rac_off
+Spatial	sdo_on	sdo_off
+Real Application Testing	rat_on	rat_off
+OLAP	olap_on	olap_off
+Automatic Storage Management	asm_on	asm_off
+Context Management Text	ctx_on	ctx_off
+3. Startup the instance and check if the option is enabled:
+Oracle PL/SQL
+
+SELECT * FROM v$option WHERE parameter = 'Partitioning';
+1
+SELECT * FROM v$option WHERE parameter = 'Partitioning';
+
+CREATION OF TABLESPACES:
+create sysdba identified by oracle
+default tablespace sysdbatablespace
+temporary tablespace sysdbatemp;
+
+CREATION OF SYNONYMS:
+create or replace public Synonym emp for SYSTEM.emp;
+
+CREATION OF ROLES:
+create role malathi identified by chamarthi;
+GIVING GRANT PERMISSIONS TO ROLE;
+grant all to malathi;
+
+
+
+
+
+
+
+
+
+
+CREATION OF TRIGGERS:
+
+create table superheroes(sh_name varchar2(10));
+
+create or replace trigger tr1_superheroes
+before insert or update or delete on superheroes
+for each row
+enable
+declare
+v_user varchar2(10);
+begin
+select user into v_user from dual;
+if inserting then
+dbms_output.put_line('1 row is inserted'||v_user);
+elsif updating then
+dbms_output.put_line('1 row is updated'||v_user);
+elsif deleting then
+dbms_output.put_line('1 row is deleted'||v_user);
+else 
+dbms_output.put_line('all rows r changed'||v_user);
+end if;
+end;
+
+
+create table sh_audit(new_name varchar2(20),old_name varchar2(20),user_name varchar2(30),entry_date varchar2(20),operation varchar2(10));
+
+create or replace trigger tr_sh_audit
+before insert or update or delete on superheroes1
+for each row
+enable
+declare
+v_user varchar2(30);
+v_date varchar2(20);
+begin
+select user , to_char(sysdate,'dd//mm/yyyy hh24:mi:ss') into v_user,v_date from dual;
+if inserting then
+insert into sh_audit(new_name,old_name,user_name,entry_date,operation) values(:new.sh_name,null,v_user,v_date,'insert');
+elsif updating then
+insert into sh_audit(new_name,old_name,user_name,entry_date,operation) values(:new.sh_name,:old.sh_name,v_user,v_date,'update');
+elsif deleting then
+insert into sh_audit(new_name,old_name,user_name,entry_date,operation) values(null,:old.sh_name,v_user,v_date,'delete');
+end if;
+end;
+
+create table superheroes_backup as select * from superheroes1;
+
+create or replace trigger sh_backup
+before insert or update or delete on superheroes1
+for each row
+enable
+begin
+if inserting then
+  insert into superheroes_backup(sh_name) values(:new.sh_name);
+elsif updating then
+ update superheroes_backup set sh_name=:new.sh_name where sh_name=:old.sh_name;
+elsif deleting then
+ delete from superheroes_backup where sh_name=:old.sh_name;
+end if;
+end;
+
+
+DDL TRIGGERS:
+
+create table schema_audit(
+ddl_user varchar2(20),
+ddl_date DATE,
+object_created varchar2(20),
+object_name varchar2(20),
+ddl_operation varchar2(20));
+
+create or replace trigger malathi7_audit_tr
+after ddl on schema
+begin
+insert into schema_audit values(
+sys_context(userenv,'current user'),
+sysdate,
+ora_dict_obj_type,
+ora_dict_obj_name,
+ora_sysevent);
+end;
+
+create table trainer( full_name varchar2(30));
+insert into trainer values('malathi');
+create table subject(sub_name varchar2(30));
+insert into subject values('oracle');
+
+create or replace view vw_rebellionrider as select full_name,sub_name from trainer,subject;
+insert into vw_rebellionrider values('chamarthi','java');
+
+create or replace trigger tr_io_insert
+instead of insert on vw_rebellionrider
+for each row
+begin
+insert into trainer values(:new.full_name);
+insert into subject values(:new.sub_name);
+end;
+
+SQL> ALTER SESSION SET SQL_TRACE=TRUE;
+
+Session altered.
+
+SQL> SELECT * FROM EMP;
+
+     EMPNO ENAME                                                    ESAL
+---------- -------------------------------------------------- ----------
+    DEPTNO
+----------
+EJOB
+--------------------------------------------------------------------------------
+      1000 alex                                                     5000
+        10
+it
+
+      1001 max                                                      6000
+        20
+hr
+
+     EMPNO ENAME                                                    ESAL
+---------- -------------------------------------------------- ----------
+    DEPTNO
+----------
+EJOB
+--------------------------------------------------------------------------------
+
+      1002 mike                                                     7000
+        30
+java
+
+      1003 varma                                                    7500
+        40
+
+     EMPNO ENAME                                                    ESAL
+---------- -------------------------------------------------- ----------
+    DEPTNO
+----------
+EJOB
+--------------------------------------------------------------------------------
+finance
+
+      1004 akash                                                    8000
+        50
+business
+
+      1005 raju                                                     5800
+
+     EMPNO ENAME                                                    ESAL
+---------- -------------------------------------------------- ----------
+    DEPTNO
+----------
+EJOB
+--------------------------------------------------------------------------------
+        60
+it
+
+      1006 ram                                                     37600
+        70
+hr
+
+
+     EMPNO ENAME                                                    ESAL
+---------- -------------------------------------------------- ----------
+    DEPTNO
+----------
+EJOB
+--------------------------------------------------------------------------------
+      1007 mahi                                                    48000
+        80
+scientist
+
+      1008 rishi                                                   34000
+        90
+finance
+
+     EMPNO ENAME                                                    ESAL
+---------- -------------------------------------------------- ----------
+    DEPTNO
+----------
+EJOB
+--------------------------------------------------------------------------------
+
+      1009 malathi                                                 52000
+        10
+astronaut
+
+      1010 chamarthi                                               32000
+        20
+
+     EMPNO ENAME                                                    ESAL
+---------- -------------------------------------------------- ----------
+    DEPTNO
+----------
+EJOB
+--------------------------------------------------------------------------------
+it
+
+
+11 rows selected.
+
+SQL> SET LINES 120
+SQL> SET PAGES 120
+SQL> SELECT * FROM EMP;
+
+     EMPNO ENAME                                                    ESAL     DEPTNO
+---------- -------------------------------------------------- ---------- ----------
+EJOB
+----------------------------------------------------------------------------------------------------
+      1000 alex                                                     5000         10
+it
+
+      1001 max                                                      6000         20
+hr
+
+      1002 mike                                                     7000         30
+java
+
+      1003 varma                                                    7500         40
+finance
+
+      1004 akash                                                    8000         50
+business
+
+      1005 raju                                                     5800         60
+it
+
+      1006 ram                                                     37600         70
+hr
+
+      1007 mahi                                                    48000         80
+scientist
+
+      1008 rishi                                                   34000         90
+finance
+
+      1009 malathi                                                 52000         10
+astronaut
+
+      1010 chamarthi                                               32000         20
+it
+
+
+11 rows selected.
+
+SQL> CREATE OR REPLACE PROCEDURE CLS(PHNE IN NUMBER)
+  2  IS
+  3  VT VARCHAR2(20);
+  4  BEGIN
+  5  SELECT ENAME INTO VT FROM EMP WHERE EMPNO=PHNE;
+  6  DBMS_OUTPUT.PUT_LINE(VT);
+  7  END;
+  8  /
+
+Procedure created.
+
+SQL> EXEC CLS(1000);
+alex
+
+PL/SQL procedure successfully completed.
+
+SQL> SHOW PARAMETER USER_DUMP_DEST;
+
+NAME                                 TYPE        VALUE
+------------------------------------ ----------- ------------------------------
+user_dump_dest                       string      C:\app\oracle\diag\rdbms\xe\xe
+                                                 \trace
+SQL> alter session set sql_trace=false;
+
+Session altered.
+
+SQL> commit;
+
+Commit complete.
+
+SQL>
+
